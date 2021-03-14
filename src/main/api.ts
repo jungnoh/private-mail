@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
+import { log } from "./util";
 
 export interface PMHeaders {
   userId: string;
@@ -31,13 +32,7 @@ export interface PMFullItem extends PMItem {
   images: ImageQuote[];
 }
 
-function log(...data: any[]) {
-  if (process.env.NODE_ENV === "development") {
-    console.log(...data);
-  }
-}
-
-async function apiGet(url: string, headers: PMHeaders) {
+export async function apiGet(url: string, headers: PMHeaders, options?: AxiosRequestConfig) {
   const head: Required<PMHeaders> = {
     ...headers,
     appVer: "1.2.3",
@@ -47,6 +42,7 @@ async function apiGet(url: string, headers: PMHeaders) {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148akb48mail"
   }
   return axios.get(url, {
+    ...options,
     headers: {
       "Accept": "*/*",
       "Application-Version": head.appVer,
@@ -66,7 +62,7 @@ async function apiGet(url: string, headers: PMHeaders) {
   });
 }
 
-async function listPage(page: number, headers: PMHeaders): Promise<{hasNext: boolean; result: PMItem[];}> {
+export async function listPage(page: number, headers: PMHeaders): Promise<{hasNext: boolean; result: PMItem[];}> {
   const url = `https://app-api.izone-mail.com/v1/inbox?is_star=0&is_unread=0&page=${page}`;
   let response;
   try {
@@ -110,7 +106,10 @@ export async function readMail(item: PMItem, headers: PMHeaders): Promise<PMFull
   log(`Reading mail ${item.id}`);
   let response = (await apiGet(`https://app-web.izone-mail.com/mail/${item.id}`, headers)).data;
   // Replace CSS
-  response = response.replace("/css/starship.css", "../css/starship.css");
+  response = response.replace("/css/starship.css", "../starship.css");
+  // Replace JS
+  response = response.replace("/js/jquery-3.3.1.min.js", "https://code.jquery.com/jquery-3.3.1.min.js");
+  response = response.replace("/js/mail-detail.js", "../mail.js");
   // Extract and rename images
   let images: ImageQuote[] = [];
   const matches = response.match(/src="https:\/\/img.izone-mail.com\/(.*?)"/g);
@@ -119,7 +118,7 @@ export async function readMail(item: PMItem, headers: PMHeaders): Promise<PMFull
       const url = match.substring(5, match.length - 1);
       return {
         url,
-        renameTo: `${index+1}.${url.substring(url.lastIndexOf(".")+1)}`
+        renameTo: `${item.id}_${index+1}.${url.substring(url.lastIndexOf(".")+1)}`
       };
     });
     for (const image of images) {

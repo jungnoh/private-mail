@@ -2,7 +2,7 @@
   "name": "wizone",
   "productName": "wizone",
   "version": "1.0.0",
-  "description": "💕",
+  "description": "IZONE 💕 WIZONE",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

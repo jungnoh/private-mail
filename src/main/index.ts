@@ -1,10 +1,16 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
+import { Downloader } from './download';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
+
+// session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+//   details.requestHeaders['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148';
+//   callback({ cancel: false, requestHeaders: details.requestHeaders });
+// });
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -15,6 +21,14 @@ const createWindow = (): void => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  const downloader = new Downloader(mainWindow, {
+    accessToken: process.env.ACCESS_TOKEN,
+    userId: process.env.USER_ID
+  });
+
+  // TODO: Remove this
+  downloader.getFullList().then(() => {});
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
