@@ -3,4 +3,20 @@ body {
   margin: auto;
   max-width: 38rem;
   padding: 2rem;
+  background-color: #EEE;
+}
+.fullWidth {
+  width: 100%;
+}
+.progressText {
+  margin-top: 24px;
+  width: 100%;
+  text-align: center;
+}
+.progress {
+  margin-top: 8px;
+}
+.button {
+  margin-top: 24px;
+  width: 100%;
 }

@@ -27,9 +27,6 @@ const createWindow = (): void => {
     userId: process.env.USER_ID
   });
 
-  // TODO: Remove this
-  downloader.getFullList().then(() => {});
-
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
