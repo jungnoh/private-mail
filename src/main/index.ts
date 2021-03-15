@@ -20,7 +20,7 @@ async function setupViewer(root: string) {
   );
   const STATIC_FILES = ["index.html", "index.css", "index.js"];
   for (const file of STATIC_FILES) {
-    await fs.promises.copyFile(path.join(__dirname, "viewer", file), path.join(root, file));
+    await fs.promises.copyFile(path.join(app.getAppPath(), ".webpack/main/viewer", file), path.join(root, file));
   }
 }
 
