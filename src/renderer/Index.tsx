@@ -1,19 +1,68 @@
 import { Button, LinearProgress, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+const { ipcRenderer } = require('electron');
+
+import React, { useEffect, useState } from "react";
+
+interface Progress {
+  stage: number;
+  now: number;
+  count: number;
+}
 
 export default function Index() {
-  const [userID, setUserID] = useState("");
+  const [userId, setUserId] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [progressText, setProgressText] = useState("로딩중");
+  const [percent, setPercent] = useState(0);
   const [active, setActive] = useState(true);
+
+  const [progress, setProgress] = useState<Progress>({
+    stage: 0,
+    now: 0,
+    count: 0
+  });
+  
+  useEffect(() => {
+    if (progress.stage === 0) {
+      setProgressText("Waiting");
+    } else if (progress.stage === 1) {
+      setProgressText("Step 1: List Pages");
+      setPercent(-1);
+    } else if (progress.stage === 2) {
+      setProgressText(`Step 2: Read Mail (${progress.now}/${progress.count})`);
+      setPercent(100 * progress.now / (progress.count === 0 ? 100 : progress.count));
+    } else if (progress.stage === 3) {
+      setProgressText(`Step 3: Download (${progress.now}/${progress.count})`);
+      setPercent(100 * progress.now / (progress.count === 0 ? 100 : progress.count));
+    } else if (progress.stage === 4) {
+      setProgressText("Done!");
+      setPercent(100);
+    } else {
+      setProgressText("Error");
+      setPercent(0);
+    }
+  }, [progress]);
+
+  useEffect(() => {
+    ipcRenderer.on("progress", (ev, progress: Progress) => {
+      setProgress(progress);
+    });
+  }, []);
+
+  const onSearch = () => {
+    ipcRenderer.send("download", {
+      accessToken,
+      userId
+    });
+  };
 
   return (
     <div className="root">
       <TextField
         className="fullWidth"
         label="User ID"
-        value={userID}
-        onChange={(e) => setUserID(e.target.value)}
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)}
       />
       <TextField
         className="fullWidth"
@@ -24,8 +73,15 @@ export default function Index() {
       <div className="progressText">{progressText}</div>
       <LinearProgress
         className="progress"
+        value={percent === -1 ? undefined: percent}
       />
-      <Button className="button" variant="contained" color="primary" disabled={!active}>
+      <Button
+        className="button"
+        variant="contained"
+        color="primary"
+        disabled={0 < progress.stage && progress.stage < 4}
+        onClick={() => onSearch()}
+      >
         Download
       </Button>
     </div>

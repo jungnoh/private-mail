@@ -15,8 +15,8 @@ body {
 }
 .progress {
   margin-top: 8px;
+  margin-bottom: 24px;
 }
 .button {
-  margin-top: 24px;
   width: 100%;
 }

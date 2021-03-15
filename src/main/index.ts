@@ -1,4 +1,4 @@
-import { app, BrowserWindow, session } from 'electron';
+import { app, BrowserWindow, ipcMain, session } from 'electron';
 import { Downloader } from './download';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -17,14 +17,35 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
+    // TODO: This is insecure!
+    webPreferences: {
+      contextIsolation: false,
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true
+    } 
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  const downloader = new Downloader(mainWindow, {
-    accessToken: process.env.ACCESS_TOKEN,
-    userId: process.env.USER_ID
+  ipcMain.on("download", (ev, token: {accessToken: string; userId: string;}) => {
+    console.log(token);
+    new Downloader(mainWindow, token)
+      .getFullList()
+      .then(() => {
+        mainWindow.webContents.send("progress", {
+          stage: 4,
+          now: 0,
+          count: 0
+        });
+      })
+      .catch(() => {
+        mainWindow.webContents.send("progress", {
+          stage: 5,
+          now: 0,
+          count: 0
+        });
+      });
   });
 
   // Open the DevTools.

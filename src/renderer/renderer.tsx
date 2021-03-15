@@ -30,5 +30,15 @@ import './index.css';
 import React from "react";
 import ReactDOM from "react-dom";
 import Index from "./Index";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
-ReactDOM.render(<Index />, document.getElementById("main"));
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "rgb(255, 89, 150)"
+    }
+  }
+});
+
+
+ReactDOM.render(<ThemeProvider theme={theme}><Index /></ThemeProvider>, document.getElementById("main"));
