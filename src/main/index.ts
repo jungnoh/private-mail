@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, session } from 'electron';
-import { Downloader } from './download';
+import { Downloader, LogItem } from './download';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -28,10 +28,13 @@ const createWindow = (): void => {
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  ipcMain.on("download", (ev, token: {accessToken: string; userId: string;}) => {
-    console.log(token);
-    new Downloader(mainWindow, token)
-      .getFullList()
+  const logHandler = (l: LogItem) => {
+    mainWindow.webContents.send("progress", l);
+  };
+
+  ipcMain.on("download", (ev, token: {accessToken: string; userId: string; firstPage: boolean;}) => {
+    new Downloader(mainWindow, token, logHandler)
+      .getFullList(token.firstPage ? 1 : undefined)
       .then(() => {
         mainWindow.webContents.send("progress", {
           stage: 4,

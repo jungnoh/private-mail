@@ -1,4 +1,4 @@
-import { Button, LinearProgress, TextField } from "@material-ui/core";
+import { Button, Checkbox, FormControlLabel, LinearProgress, TextField } from "@material-ui/core";
 const { ipcRenderer } = require('electron');
 
 import React, { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ export default function Index() {
   const [accessToken, setAccessToken] = useState("");
   const [progressText, setProgressText] = useState("로딩중");
   const [percent, setPercent] = useState(0);
-  const [active, setActive] = useState(true);
+  const [firstPage, setFirstPage] = useState(false);
 
   const [progress, setProgress] = useState<Progress>({
     stage: 0,
@@ -26,7 +26,7 @@ export default function Index() {
     if (progress.stage === 0) {
       setProgressText("Waiting");
     } else if (progress.stage === 1) {
-      setProgressText("Step 1: List Pages");
+      setProgressText(`Step 1: List Pages (${progress.count} and counting)`);
       setPercent(-1);
     } else if (progress.stage === 2) {
       setProgressText(`Step 2: Read Mail (${progress.now}/${progress.count})`);
@@ -52,7 +52,8 @@ export default function Index() {
   const onSearch = () => {
     ipcRenderer.send("download", {
       accessToken,
-      userId
+      userId,
+      firstPage
     });
   };
 
@@ -73,6 +74,7 @@ export default function Index() {
       <div className="progressText">{progressText}</div>
       <LinearProgress
         className="progress"
+        variant={percent === -1 ? "indeterminate" : "determinate"}
         value={percent === -1 ? undefined: percent}
       />
       <Button
@@ -84,6 +86,17 @@ export default function Index() {
       >
         Download
       </Button>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={firstPage}
+            onChange={() => setFirstPage(!firstPage)}
+            name="checkFirstPage"
+            color="primary"
+          />
+        }
+        label="First page only"
+      />
     </div>
   );
 }

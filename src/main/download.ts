@@ -12,12 +12,20 @@ async function mkdirp(targetDir: string) {
   return await fs.promises.mkdir(targetDir, {recursive: true});
 }
 
+export interface LogItem {
+  stage: number;
+  now: number;
+  count: number;
+}
+
 export class Downloader {
   window: BrowserWindow;
   headers: PMHeaders;
-  constructor(window: BrowserWindow, headers: PMHeaders) {
+  logger?: (l: LogItem) => void;
+  constructor(window: BrowserWindow, headers: PMHeaders, logger?: (l: LogItem) => void) {
     this.window = window;
     this.headers = headers;
+    this.logger = logger;
   }
 
   private _downloadPromise(url: string, saveTo: string): Promise<void> {
@@ -67,7 +75,10 @@ export class Downloader {
     await this._downloadPromise("https://app-web.izone-mail.com/css/starship.css", cssPath);
     await this._downloadPromise("https://app-web.izone-mail.com/js/mail-detail.js", jsPath);
     // Save mail
+    let index = 0;
     for (const mail of mails) {
+      index++;
+      this.logger?.({stage: 3, now: index, count: mails.length});
       await this.saveMail(mail);
     }
   }
@@ -75,7 +86,10 @@ export class Downloader {
   async getFullList(page?: number): Promise<void> {
     let mail: PMItem[];
     // List
+    let listIndex = 0;
     if (page !== undefined) {
+      listIndex++;
+      this.logger?.({stage: 1, now: listIndex, count: 0});
       const {result} = await API.listPage(page, this.headers);
       mail = result;
     } else {
@@ -83,7 +97,10 @@ export class Downloader {
     }
     // Get detail for each mail
     const fullMail = [];
+    let index = 0;
     for (const it of mail) {
+      index++;
+      this.logger?.({stage: 2, now: index, count: mail.length});
       fullMail.push(await API.readMail(it, this.headers));
     }
     // Download
