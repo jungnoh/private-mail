@@ -31,6 +31,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Index from "./Index";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { HashRouter, Route, Switch } from 'react-router-dom';
+import Download from './Download';
+import Viewer from './Viewer';
 
 const theme = createMuiTheme({
   palette: {
@@ -41,4 +44,21 @@ const theme = createMuiTheme({
 });
 
 
-ReactDOM.render(<ThemeProvider theme={theme}><Index /></ThemeProvider>, document.getElementById("main"));
+const router = (
+  <HashRouter>
+    <Switch>
+      <Route path="/" exact>
+        <Index />
+      </Route>
+      <Route path="/download">
+        <Download />
+      </Route>
+      <Route path="/viewer">
+        <Viewer />
+      </Route>
+    </Switch>
+  </HashRouter>
+);
+
+
+ReactDOM.render(<ThemeProvider theme={theme}>{router}</ThemeProvider>, document.getElementById("main"));

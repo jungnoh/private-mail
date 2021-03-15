@@ -5,6 +5,11 @@ body {
   padding: 2rem;
   background-color: #EEE;
 }
+.container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
 .fullWidth {
   width: 100%;
 }
@@ -19,4 +24,14 @@ body {
 }
 .button {
   width: 100%;
+}
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+.mainButton {
+  width: 100%;
+  margin-top: 8px !important;
 }
