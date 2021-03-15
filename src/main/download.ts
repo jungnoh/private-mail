@@ -85,6 +85,13 @@ export class Downloader {
 
   async getFullList(page?: number): Promise<void> {
     let mail: PMItem[];
+    // Profile images
+    const profileList = (await API.memberImages(this.headers)).map(x => ({
+      url: x.url,
+      renameTo: path.join(ROOT_DIR, "profile", x.renameTo)
+    }));
+    mkdirp(path.join(ROOT_DIR, "profile"));
+    await Promise.all(profileList.map(x => this._downloadPromise(x.url, x.renameTo)));
     // List
     let listIndex = 0;
     if (page !== undefined) {

@@ -131,3 +131,14 @@ export async function readMail(item: PMItem, headers: PMHeaders): Promise<PMFull
     body: response
   }
 }
+
+export async function memberImages(headers: PMHeaders): Promise<ImageQuote[]> {
+  log(`Reading profile images`);
+  const response = (await apiGet("https://app-api.izone-mail.com/v1/menu", headers)).data;
+  return response.receiving_members[0].team_members[0].members.map((x: any) => {
+    return {
+      url: x.member.image_url,
+      renameTo: `${x.member.id}.jpg`
+    };
+  });
+}

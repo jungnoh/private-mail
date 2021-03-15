@@ -1,5 +1,9 @@
-import { app, BrowserWindow, ipcMain, session } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { Downloader, LogItem } from './download';
+import fs from "fs";
+import os from "os";
+import path from "path";
+import { log } from './util';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -7,10 +11,18 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit();
 }
 
-// session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-//   details.requestHeaders['User-Agent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148';
-//   callback({ cancel: false, requestHeaders: details.requestHeaders });
-// });
+async function setupViewer(root: string) {
+  // Make meta.js
+  const meta = await fs.promises.readFile(path.join(root, "meta.json"));
+  await fs.promises.writeFile(
+    path.join(root, "meta.js"),
+    `var mailList = ${meta};`
+  );
+  const STATIC_FILES = ["index.html", "index.css", "index.js"];
+  for (const file of STATIC_FILES) {
+    await fs.promises.copyFile(path.join(__dirname, "viewer", file), path.join(root, file));
+  }
+}
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -42,7 +54,8 @@ const createWindow = (): void => {
           count: 0
         });
       })
-      .catch(() => {
+      .catch((err) => {
+        log(err);
         mainWindow.webContents.send("progress", {
           stage: 5,
           now: 0,
@@ -51,16 +64,27 @@ const createWindow = (): void => {
       });
   });
 
+  ipcMain.on("setup-viewer", () => {
+    setupViewer(path.join(os.homedir(), "wizone")).then(() => {
+      const htmlPath = path.join(os.homedir(), "wizone/index.html");
+      mainWindow.webContents.send("setup-viewer", htmlPath);
+      shell.openExternal("file://" + htmlPath);
+    }).catch(() => {
+      mainWindow.webContents.send("setup-viewer", null);
+    });
+  })
+
   // Open the DevTools.
   if (process.env.NODE_ENV === "development") {
     mainWindow.webContents.openDevTools();
   }
+
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.once('ready', createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

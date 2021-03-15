@@ -1,0 +1,77 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+* {
+  font-family: Verdana,Roboto,Droid Sans,"游ゴシック",YuGothic,"メイリオ",Meiryo,"ヒラギノ角ゴ ProN W3",Hiragino Kaku Gothic ProN,"ＭＳ Ｐゴシック",sans-serif;
+}
+.list-item-row, .header-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.list-item-author, .header-author {
+  color: #4d4b58;
+}
+.list-item-time, .header-time {
+  color: #c2c1c6;
+}
+.list-item-body {
+  color: #87868e;
+}
+.list-item {
+  width: 100%;
+  border-bottom: solid #e6e6e8 1px;
+  padding: 0.5em;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+}
+.list-item > div {
+  flex-direction: column;
+  flex-grow: 1;
+  padding-left: 16px;
+}
+#mail-frame {
+  border: 0;
+  width: 100%;
+  flex-grow: 1;
+}
+.header-row {
+  width: 100%;
+  border-bottom: solid #e6e6e8 1px;
+  padding: 0.5em 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.header-row > div {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding-left: 16px;
+}
+.header-to span {
+  color: #c2c1c6;
+}
+#container-view {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+#view-close {
+  cursor: pointer;
+}
+#view-close svg {
+  color: #c2c1c6;
+  height: 24px;
+  width: 24px;
+}
+.profile {
+  height: 48px;
+  width: 48px;
+  border-radius: 24px;
+}

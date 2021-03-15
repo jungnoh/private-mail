@@ -2,6 +2,6 @@ import React from "react";
 
 export default function Viewer() {
   return (
-    <div></div>
+    <iframe className="frame" src="https://www.dcinside.com"></iframe>
   );
 }
