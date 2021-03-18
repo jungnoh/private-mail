@@ -4,6 +4,8 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { log } from './util';
+import { apiHTTP2, issueTokenPair, migrateAway, migrateFrom } from './api/migrate';
+import { ANDROID_UA } from './api/ua';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -105,3 +107,10 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+// issueTokenPair(ANDROID_UA).then((pair) => {
+//   console.log(pair);
+//   return migrateFrom("", "", pair, ANDROID_UA);
+// }).then((pair) => console.log(pair));
+
+// migrateAway({userId: "", accessToken: ""}, ANDROID_UA).then(console.log);

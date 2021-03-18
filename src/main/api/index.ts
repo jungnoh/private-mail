@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig } from "axios";
-import { log } from "./util";
+import { log } from "../util";
 
 export interface PMHeaders {
   userId: string;
