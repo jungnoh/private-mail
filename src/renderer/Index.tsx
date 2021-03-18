@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router";
-const { ipcRenderer } = require('electron');
+import { ipcRenderer } from "electron";
 
 export default function Index() {
   const history = useHistory();

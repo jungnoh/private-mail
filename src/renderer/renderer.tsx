@@ -26,14 +26,14 @@
  * ```
  */
 
-import './index.css';
+import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import Index from "./Index";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { HashRouter, Route, Switch } from 'react-router-dom';
-import Download from './Download';
-import Viewer from './Viewer';
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import Download from "./Download";
+import Viewer from "./Viewer";
 
 const theme = createMuiTheme({
   palette: {

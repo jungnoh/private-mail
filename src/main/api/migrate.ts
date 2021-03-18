@@ -28,25 +28,25 @@ export function apiHTTP2(
 
   const client = http2.connect(origin);
   return new Promise<HTTP2Response>((res, rej) => {
-    client.on('error', rej);
+    client.on("error", rej);
 
     const reqHeaders: http2.OutgoingHttpHeaders = {
-      ':method': method,
-      ':path': pathname,
-      'content-type': headers.contentType ?? 'application/json',
-      'user-id': headers.userId,
-      'access-token': headers.accessToken,
-      'os-type': headers.osType ?? ANDROID_UA["os-type"],
-      'os-version': headers.osVersion ?? ANDROID_UA["os-version"],
-      'user-agent': headers.userAgent ?? ANDROID_UA["user-agent"],
-      'device-version': headers.device ?? ANDROID_UA["device-version"],
-      'application-version': headers.appVer ?? ANDROID_UA["application-version"],
-      'application-language': headers.language,
-      'terms-version': headers.termsVersion,
-      'accept-encoding': 'gzip'
+      ":method": method,
+      ":path": pathname,
+      "content-type": headers.contentType ?? "application/json",
+      "user-id": headers.userId,
+      "access-token": headers.accessToken,
+      "os-type": headers.osType ?? ANDROID_UA["os-type"],
+      "os-version": headers.osVersion ?? ANDROID_UA["os-version"],
+      "user-agent": headers.userAgent ?? ANDROID_UA["user-agent"],
+      "device-version": headers.device ?? ANDROID_UA["device-version"],
+      "application-version": headers.appVer ?? ANDROID_UA["application-version"],
+      "application-language": headers.language,
+      "terms-version": headers.termsVersion,
+      "accept-encoding": "gzip"
     };
     const req = client.request(reqHeaders);
-    req.setEncoding('utf8');
+    req.setEncoding("utf8");
 
     let bodyString;
     if (method === "POST") {
@@ -56,17 +56,17 @@ export function apiHTTP2(
         bodyString = reqHeaders["content-type"] === "application/json" ? JSON.stringify(body) : body;
       }
       const buffer = Buffer.from(bodyString, "utf-8");
-      reqHeaders['content-length'] = buffer.length;
+      reqHeaders["content-length"] = buffer.length;
       req.write(buffer);
     }
 
     let resultHeaders: http2.IncomingHttpHeaders & http2.IncomingHttpStatusHeader = {};
-    req.on('response', (headers) => {
+    req.on("response", (headers) => {
       resultHeaders = headers;
     });
-    let data = '';
-    req.on('data', (chunk) => { data += chunk; });
-    req.on('end', () => {
+    let data = "";
+    req.on("data", (chunk) => { data += chunk; });
+    req.on("end", () => {
       client.close();
       let parsedBody;
       try {

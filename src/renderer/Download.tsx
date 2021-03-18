@@ -1,5 +1,5 @@
 import { Button, Checkbox, FormControlLabel, LinearProgress, TextField } from "@material-ui/core";
-const { ipcRenderer } = require('electron');
+import { ipcRenderer } from "electron";
 
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";

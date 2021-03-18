@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { log } from "../util";
 
 export interface PMHeaders {
@@ -32,7 +32,7 @@ export interface PMFullItem extends PMItem {
   images: ImageQuote[];
 }
 
-export async function apiGet(url: string, headers: PMHeaders, options?: AxiosRequestConfig) {
+export async function apiGet(url: string, headers: PMHeaders, options?: AxiosRequestConfig): Promise<AxiosResponse<any>> {
   const head: Required<PMHeaders> = {
     ...headers,
     appVer: "1.2.3",
@@ -133,7 +133,7 @@ export async function readMail(item: PMItem, headers: PMHeaders): Promise<PMFull
 }
 
 export async function memberImages(headers: PMHeaders): Promise<ImageQuote[]> {
-  log(`Reading profile images`);
+  log("Reading profile images");
   const response = (await apiGet("https://app-api.izone-mail.com/v1/menu", headers)).data;
   return response.receiving_members[0].team_members[0].members.map((x: any) => {
     return {
