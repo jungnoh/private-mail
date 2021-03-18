@@ -34,6 +34,8 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import { HashRouter, Route, Switch } from "react-router-dom";
 import Download from "./Download";
 import Viewer from "./Viewer";
+import Import from "./Import";
+import Export from "./Export";
 
 const theme = createMuiTheme({
   palette: {
@@ -42,7 +44,6 @@ const theme = createMuiTheme({
     }
   }
 });
-
 
 const router = (
   <HashRouter>
@@ -55,6 +56,12 @@ const router = (
       </Route>
       <Route path="/viewer">
         <Viewer />
+      </Route>
+      <Route path="/import">
+        <Import />
+      </Route>
+      <Route path="/export">
+        <Export />
       </Route>
     </Switch>
   </HashRouter>

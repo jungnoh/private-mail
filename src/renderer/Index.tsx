@@ -38,6 +38,25 @@ export default function Index() {
       >
         View
       </Button>
+      <Button
+        className="mainButton"
+        variant="contained"
+        color="primary"
+        onClick={() => history.push("/import")}
+      >
+        ⚠️&nbsp;&nbsp;&nbsp;Import User&nbsp;&nbsp;⚠️
+      </Button>
+      <Button
+        className="mainButton"
+        variant="contained"
+        color="primary"
+        onClick={() => history.push("/export")}
+      >
+        ⚠️&nbsp;&nbsp;&nbsp;Export User&nbsp;&nbsp;⚠️
+      </Button>
+      <div className="disclaimer">
+        본 프로그램의 이용에 따른 책임은 사용자에게 있으며,<br />개발자는 프로그램을 사용함에 따라 발생할 수 있는 결과에 일체 책임을 지지 않습니다.
+      </div>
     </div>
   );
 }

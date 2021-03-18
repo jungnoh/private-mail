@@ -24,6 +24,7 @@ body {
 }
 .button {
   width: 100%;
+  margin-top: 8px !important;
 }
 .title {
   width: 100%;
@@ -44,4 +45,16 @@ body {
   right: 0;
   bottom: 0;
   border: 0;
+}
+.disclaimer {
+  width: 100%;
+  color: #FF0000;
+  text-align: center;
+  margin-top: 32px;
+  font-size: 0.75em;
+}
+.logs {
+  text-align: center;
+  font-size: 0.9em;
+  margin: 16px 0;
 }
